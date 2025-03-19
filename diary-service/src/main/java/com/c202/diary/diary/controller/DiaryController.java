@@ -6,6 +6,7 @@ import com.c202.diary.diary.model.response.DiaryDetailResponseDto;
 import com.c202.diary.diary.model.response.DiaryListResponseDto;
 import com.c202.diary.diary.service.DiaryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class DiaryController {
 
     @PutMapping("/{diarySeq}")
     public DiaryDetailResponseDto updateDiary(@RequestBody DiaryUpdateRequestDto dto, @PathVariable Integer diarySeq) {
+        return ResponseEntity.created()
         return diaryService.updateDiary(diarySeq, dto);
     }
 
