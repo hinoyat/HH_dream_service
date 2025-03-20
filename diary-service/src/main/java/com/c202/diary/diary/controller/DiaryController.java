@@ -1,60 +1,84 @@
 package com.c202.diary.diary.controller;
 
+import com.c202.diary.tag.service.TagService;
+import com.c202.dto.ResponseDto;
 import com.c202.diary.diary.model.request.DiaryCreateRequestDto;
 import com.c202.diary.diary.model.request.DiaryUpdateRequestDto;
 import com.c202.diary.diary.model.response.DiaryDetailResponseDto;
 import com.c202.diary.diary.model.response.DiaryListResponseDto;
 import com.c202.diary.diary.service.DiaryService;
+import com.c202.exception.CustomException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/diaries")
 @RequiredArgsConstructor
+@Validated
 public class DiaryController {
 
     private final DiaryService diaryService;
+    private final TagService tagService;
 
     @PostMapping("")
-    public DiaryDetailResponseDto createDiary(@RequestHeader("X-User-Seq") Long userSeq, @RequestBody DiaryCreateRequestDto dto) {
-        return diaryService.createDiary(userSeq, dto);
+    public ResponseEntity<ResponseDto<DiaryDetailResponseDto>> createDiary(
+            @RequestHeader("X-User-Seq") @NotNull Integer userSeq,
+            @RequestBody DiaryCreateRequestDto dto
+    ) {
+        return ResponseEntity.ok(ResponseDto.success(201, "일기 작성 완료", diaryService.createDiary(userSeq, dto)));
     }
 
     @PutMapping("/{diarySeq}")
-    public DiaryDetailResponseDto updateDiary(@RequestBody DiaryUpdateRequestDto dto, @PathVariable Integer diarySeq) {
-        return ResponseEntity.created()
-        return diaryService.updateDiary(diarySeq, dto);
+    public ResponseEntity<ResponseDto<DiaryDetailResponseDto>> updateDiary(
+            @RequestHeader("X-User-Seq") @NotNull Integer userSeq,
+            @RequestBody DiaryUpdateRequestDto dto,
+            @PathVariable Integer diarySeq
+    ) {
+        return ResponseEntity.ok(ResponseDto.success(200, "일기 수정 완료", diaryService.updateDiary(diarySeq, userSeq, dto)));
     }
 
     @DeleteMapping("/{diarySeq}")
-    public int deleteDiary(@PathVariable Integer diarySeq) {
-        diaryService.deleteDiary(diarySeq);
-        return diarySeq;
+    public ResponseEntity<ResponseDto<Objects>> deleteDiary(
+            @RequestHeader("X-User-Seq") @NotNull Integer userSeq,
+            @PathVariable Integer diarySeq
+    ) {
+        diaryService.deleteDiary(diarySeq, userSeq);
+        return ResponseEntity.ok(ResponseDto.success(204, "일기 삭제 완료"));
     }
 
-    // 조회 부분은 일단 더미 숫자로 넣었습니다 연동 성공 후 테스트 하면서 작업할게요!
     @GetMapping("/me")
-    public List<DiaryListResponseDto> getMyDiaries(@RequestHeader("X-User-Seq") Long userSeq) {
-        return diaryService.getMyDiaries(userSeq);
+    public ResponseEntity<ResponseDto<List<DiaryListResponseDto>>> getMyDiaries(
+            @RequestHeader("X-User-Seq") @NotNull Integer userSeq
+    ) {
+        return ResponseEntity.ok(ResponseDto.success(200, "내 일기 조회 완료", diaryService.getMyDiaries(userSeq)));
     }
 
     @GetMapping("/users/{userSeq}")
-    public List<DiaryListResponseDto> getUserDiaries(@RequestHeader("X-User-Seq") Long userSeq) {
-        return diaryService.getUserDiaries(userSeq);
+    public ResponseEntity<ResponseDto<List<DiaryListResponseDto>>> getUserDiaries(
+            @PathVariable Integer userSeq
+    ) {
+        return ResponseEntity.ok(ResponseDto.success(200, "사용자 일기 조회 완료", diaryService.getUserDiaries(userSeq)));
     }
 
-    // 개별 조회
     @GetMapping("/{diarySeq}")
-    public DiaryDetailResponseDto getDiary(@PathVariable Integer diarySeq) {
-        return diaryService.getDiary(diarySeq);
+    public ResponseEntity<ResponseDto<DiaryDetailResponseDto>> getDiary(
+            @PathVariable Integer diarySeq
+    ) {
+        return ResponseEntity.ok(ResponseDto.success(200, "일기 상세 조회 완료", diaryService.getDiary(diarySeq)));
     }
 
-    // 공개 비공개 토글
     @PutMapping("/{diarySeq}/visibility")
-    public String toggleDiaryIsPublic(@PathVariable Integer diarySeq) {
-        return diaryService.toggleDiaryIsPublic(diarySeq);
+    public ResponseEntity<ResponseDto<DiaryDetailResponseDto>> toggleDiaryIsPublic(
+            @RequestHeader("X-User-Seq") @NotNull Integer userSeq,
+            @PathVariable Integer diarySeq
+    ) {
+        return ResponseEntity.ok(ResponseDto.success(200, "일기 공개 상태 변경 완료", diaryService.toggleDiaryIsPublic(diarySeq, userSeq)));
     }
+
 }

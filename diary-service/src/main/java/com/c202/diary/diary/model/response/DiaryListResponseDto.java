@@ -2,12 +2,12 @@ package com.c202.diary.diary.model.response;
 
 import com.c202.diary.diary.entity.Diary;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
 @Builder
 public class DiaryListResponseDto {
 

@@ -1,9 +1,11 @@
 package com.c202.diary.diary.model.request;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+import java.util.List;
+
+@Getter
 @Builder
 public class DiaryUpdateRequestDto {
 
@@ -13,4 +15,5 @@ public class DiaryUpdateRequestDto {
 
     private String dreamDate;
 
+    private List<String> tags;
 }
