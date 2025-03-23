@@ -1,11 +1,18 @@
 package com.c202.diary.diary.service;
 
+import com.c202.diary.coordinate.model.CoordinateDto;
+import com.c202.diary.coordinate.service.CoordinateService;
 import com.c202.diary.diary.entity.Diary;
 import com.c202.diary.diary.model.request.DiaryCreateRequestDto;
 import com.c202.diary.diary.model.request.DiaryUpdateRequestDto;
 import com.c202.diary.diary.model.response.DiaryDetailResponseDto;
 import com.c202.diary.diary.model.response.DiaryListResponseDto;
+import com.c202.diary.diary.model.response.UniverseDataResponseDto;
 import com.c202.diary.diary.repository.DiaryRepository;
+import com.c202.diary.emotion.entity.Emotion;
+import com.c202.diary.emotion.model.response.EmotionResponseDto;
+import com.c202.diary.emotion.repository.EmotionRepository;
+import com.c202.diary.emotion.service.EmotionService;
 import com.c202.diary.tag.entity.DiaryTag;
 import com.c202.diary.tag.model.response.TagResponseDto;
 import com.c202.diary.tag.repository.DiaryTagRepository;
@@ -18,7 +25,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +37,9 @@ public class DiaryServiceImpl implements DiaryService {
     private final TagService tagService;
     private final DiaryRepository diaryRepository;
     private final DiaryTagRepository diaryTagRepository;
+    private final EmotionRepository emotionRepository;
+    private final EmotionService emotionService;
+    private final CoordinateService coordinateService;
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd HHmmss");
 
     @Transactional
@@ -35,6 +47,14 @@ public class DiaryServiceImpl implements DiaryService {
     public DiaryDetailResponseDto createDiary(Integer userSeq, DiaryCreateRequestDto request) {
 
         String now = LocalDateTime.now().format(DATE_TIME_FORMATTER);
+
+        // 감정 검증
+        Emotion emotion = emotionRepository.findByName(request.getMainEmotion())
+                .orElseThrow(() -> new CustomException("존재하지 않는 감정입니다: " + request.getMainEmotion()));
+
+        // 좌표 생성
+        CoordinateDto coordinates = coordinateService.generateCoordinates(
+                request.getMainEmotion(), request.getTags(), null);
 
         Diary diary = Diary.builder()
                 .userSeq(userSeq)
@@ -45,7 +65,13 @@ public class DiaryServiceImpl implements DiaryService {
                 .createdAt(now)
                 .updatedAt(now)
                 .isDeleted("N")
+                .x(coordinates.getX())
+                .y(coordinates.getY())
+                .z(coordinates.getZ())
+                .emotionSeq(coordinates.getEmotionSeq())
                 .build();
+
+        emotionService.incrementDiaryCount(emotion.getEmotionSeq());
 
         diaryRepository.save(diary);
 
@@ -70,21 +96,55 @@ public class DiaryServiceImpl implements DiaryService {
                 now
         );
 
+        Integer oldEmotionSeq = diary.getEmotionSeq();
+        Emotion newEmotion = emotionRepository.findByName(request.getMainEmotion())
+                .orElseThrow(() -> new CustomException("존재하지 않는 감정입니다: " + request.getMainEmotion()));
+
+        boolean emotionChanged = oldEmotionSeq == null || !oldEmotionSeq.equals(newEmotion.getEmotionSeq());
+
+
         List<TagResponseDto> tagDtos = new ArrayList<>();
 
         diaryTagRepository.deleteByDiary(diary);
 
         tagDtos = tagService.processTags(diary, request.getTags(), now);
 
+        // 좌표 업데이트
+        CoordinateDto coordinates;
+        if (emotionChanged) {
+            // 이전 감정 카운트 감소
+            if (oldEmotionSeq != null) {
+                emotionService.decrementDiaryCount(oldEmotionSeq);
+            }
+
+            // 새 감정에 좌표 생성
+            coordinates = coordinateService.generateCoordinates(
+                    request.getMainEmotion(), request.getTags(), diary.getDiarySeq());
+
+            // 새 감정 카운트 증가
+            emotionService.incrementDiaryCount(newEmotion.getEmotionSeq());
+        } else {
+            // 같은 감정 내에서 위치 조정
+            coordinates = coordinateService.updateCoordinates(diary, request.getMainEmotion(), request.getTags());
+        }
+
+        diary.setCoordinates(coordinates.getX(), coordinates.getY(), coordinates.getZ(), coordinates.getEmotionSeq());
+
         diaryRepository.save(diary);
 
-        return DiaryDetailResponseDto.toDto(diary, tagDtos);
+        List<Integer> connectedDiaries = coordinateService.findSimilarDiaries(diary.getDiarySeq(), 5);
+
+        return DiaryDetailResponseDto.toDto(diary, tagDtos, newEmotion.getName(), connectedDiaries);
     }
 
     @Transactional
     @Override
     public void deleteDiary(Integer diarySeq, Integer userSeq) {
         Diary diary = validateDiary(diarySeq, userSeq);
+
+        if (diary.getEmotionSeq() != null) {
+            emotionService.decrementDiaryCount(diary.getEmotionSeq());
+        }
         diary.deleteDiary();
     }
 
@@ -92,14 +152,37 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public List<DiaryListResponseDto> getMyDiaries(Integer userSeq) {
         List<Diary> diaries = diaryRepository.findByUserSeqAndIsDeleted(userSeq, "N");
-        return DiaryListResponseDto.toDto(diaries);
+
+        List<String> emotionNames = new ArrayList<>();
+        for (Diary diary : diaries) {
+            String emotionName = "";
+            if (diary.getEmotionSeq() != null) {
+                emotionName = emotionRepository.findById(diary.getEmotionSeq())
+                        .map(Emotion::getName)
+                        .orElse("");
+            }
+            emotionNames.add(emotionName);
+        }
+
+        return DiaryListResponseDto.toDto(diaries, emotionNames);
     }
 
     @Transactional
     @Override
     public List<DiaryListResponseDto> getUserDiaries(Integer userSeq) {
         List<Diary> diaries = diaryRepository.findByUserSeqAndIsPublicAndIsDeleted(userSeq, "Y", "N");
-        return DiaryListResponseDto.toDto(diaries);
+        List<String> emotionNames = new ArrayList<>();
+        for (Diary diary : diaries) {
+            String emotionName = "";
+            if (diary.getEmotionSeq() != null) {
+                emotionName = emotionRepository.findById(diary.getEmotionSeq())
+                        .map(Emotion::getName)
+                        .orElse("");
+            }
+            emotionNames.add(emotionName);
+        }
+
+        return DiaryListResponseDto.toDto(diaries, emotionNames);
     }
 
     @Transactional
@@ -110,7 +193,17 @@ public class DiaryServiceImpl implements DiaryService {
 
         List<TagResponseDto> tagDtos = getTagsForDiary(diary);
 
-        return DiaryDetailResponseDto.toDto(diary, tagDtos);
+        String emotionName = "";
+        if (diary.getEmotionSeq() != null) {
+            emotionName = emotionRepository.findById(diary.getEmotionSeq())
+                    .map(Emotion::getName)
+                    .orElse("");
+        }
+
+        // 연결된 일기 목록 찾기
+        List<Integer> connectedDiaries = coordinateService.findSimilarDiaries(diary.getDiarySeq(), 5);
+
+        return DiaryDetailResponseDto.toDto(diary, tagDtos, emotionName, connectedDiaries);
     }
     
     @Transactional
@@ -130,9 +223,60 @@ public class DiaryServiceImpl implements DiaryService {
 
         List<TagResponseDto> tagDtos = getTagsForDiary(diary);
 
-        return DiaryDetailResponseDto.toDto(diary, tagDtos);
+        // 감정 이름 가져오기
+        String emotionName = "";
+        if (diary.getEmotionSeq() != null) {
+            emotionName = emotionRepository.findById(diary.getEmotionSeq())
+                    .map(Emotion::getName)
+                    .orElse("");
+        }
 
+        // 연결된 일기 목록 찾기
+        List<Integer> connectedDiaries = coordinateService.findSimilarDiaries(diary.getDiarySeq(), 5);
+
+        return DiaryDetailResponseDto.toDto(diary, tagDtos, emotionName, connectedDiaries);
     }
+
+    @Transactional
+    @Override
+    public UniverseDataResponseDto getUniverseData(Integer userSeq) {
+        // 사용자의 모든 일기 가져오기
+        List<Diary> diaries = diaryRepository.findByUserSeqAndIsDeleted(userSeq, "N");
+
+        // 일기별 감정 이름 매핑
+        Map<Integer, String> emotionNames = new HashMap<>();
+        for (Diary diary : diaries) {
+            if (diary.getEmotionSeq() != null) {
+                String emotionName = emotionRepository.findById(diary.getEmotionSeq())
+                        .map(Emotion::getName)
+                        .orElse("");
+                emotionNames.put(diary.getDiarySeq(), emotionName);
+            }
+        }
+
+        // 일기 DTO 생성
+        List<DiaryListResponseDto> diaryDtos = diaries.stream()
+                .map(diary -> DiaryListResponseDto.toDto(diary, emotionNames.get(diary.getDiarySeq())))
+                .collect(Collectors.toList());
+
+        // 모든 감정 영역 정보 가져오기
+        List<EmotionResponseDto> emotions = emotionService.getAllEmotions();
+
+        // 일기 연결 정보 생성
+        Map<Integer, List<Integer>> connections = new HashMap<>();
+        for (Diary diary : diaries) {
+            List<Integer> connected = coordinateService.findSimilarDiaries(diary.getDiarySeq(), 5);
+            connections.put(diary.getDiarySeq(), connected);
+        }
+
+        // 우주 데이터 DTO 반환
+        return UniverseDataResponseDto.builder()
+                .diaries(diaryDtos)
+                .emotions(emotions)
+                .connections(connections)
+                .build();
+    }
+
 
     // 일기 유효성 검증
     private Diary validateDiary(Integer diarySeq, Integer userSeq) {

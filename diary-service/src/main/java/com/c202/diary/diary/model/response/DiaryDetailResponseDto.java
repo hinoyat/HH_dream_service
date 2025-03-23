@@ -11,6 +11,10 @@ import java.util.List;
 @Builder
 public class DiaryDetailResponseDto {
 
+    private Integer diarySeq;
+
+    private Integer userSeq;
+
     private String title;
 
     private String content;
@@ -27,21 +31,48 @@ public class DiaryDetailResponseDto {
 
     private List<TagResponseDto> tags;
 
-
-    public static DiaryDetailResponseDto toDto(Diary diary) {
-        return toDto(diary, null);
-    }
+    private Double x;
+    private Double y;
+    private Double z;
+    private Integer emotionSeq;
+    private String emotionName;
+    private List<Integer> connectedDiaries;
 
     public static DiaryDetailResponseDto toDto(Diary diary, List<TagResponseDto> tags) {
         return DiaryDetailResponseDto.builder()
+                .diarySeq(diary.getDiarySeq())
+                .userSeq(diary.getUserSeq())
                 .title(diary.getTitle())
                 .content(diary.getContent())
-                .videoUrl(diary.getVideoUrl())
                 .dreamDate(diary.getDreamDate())
                 .createdAt(diary.getCreatedAt())
                 .updatedAt(diary.getUpdatedAt())
                 .isPublic(diary.getIsPublic())
+                .x(diary.getX())
+                .y(diary.getY())
+                .z(diary.getZ())
+                .emotionSeq(diary.getEmotionSeq())
                 .tags(tags)
+                .build();
+    }
+    public static DiaryDetailResponseDto toDto(Diary diary, List<TagResponseDto> tags,
+                                               String emotionName, List<Integer> connectedDiaries) {
+        return DiaryDetailResponseDto.builder()
+                .diarySeq(diary.getDiarySeq())
+                .userSeq(diary.getUserSeq())
+                .title(diary.getTitle())
+                .content(diary.getContent())
+                .dreamDate(diary.getDreamDate())
+                .createdAt(diary.getCreatedAt())
+                .updatedAt(diary.getUpdatedAt())
+                .isPublic(diary.getIsPublic())
+                .x(diary.getX())
+                .y(diary.getY())
+                .z(diary.getZ())
+                .emotionSeq(diary.getEmotionSeq())
+                .emotionName(emotionName)
+                .tags(tags)
+                .connectedDiaries(connectedDiaries)
                 .build();
     }
 }

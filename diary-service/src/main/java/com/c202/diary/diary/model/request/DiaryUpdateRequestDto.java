@@ -16,4 +16,6 @@ public class DiaryUpdateRequestDto {
     private String dreamDate;
 
     private List<String> tags;
+
+    private String mainEmotion;
 }

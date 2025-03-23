@@ -19,4 +19,6 @@ public class DiaryCreateRequestDto {
 
     private List<String> tags;
 
+    private String mainEmotion;
+
 }

@@ -1,5 +1,6 @@
 package com.c202.diary.diary.controller;
 
+import com.c202.diary.diary.model.response.UniverseDataResponseDto;
 import com.c202.diary.tag.service.TagService;
 import com.c202.dto.ResponseDto;
 import com.c202.diary.diary.model.request.DiaryCreateRequestDto;
@@ -79,6 +80,13 @@ public class DiaryController {
             @PathVariable Integer diarySeq
     ) {
         return ResponseEntity.ok(ResponseDto.success(200, "일기 공개 상태 변경 완료", diaryService.toggleDiaryIsPublic(diarySeq, userSeq)));
+    }
+
+    @GetMapping("/universe")
+    public ResponseEntity<ResponseDto<UniverseDataResponseDto>> getUniverseData(
+            @RequestHeader("X-User-Seq") @NotNull Integer userSeq
+    ) {
+        return ResponseEntity.ok(ResponseDto.success(200, "우주 데이터 조회 완료", diaryService.getUniverseData(userSeq)));
     }
 
 }

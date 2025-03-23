@@ -4,6 +4,7 @@ import com.c202.diary.diary.model.request.DiaryCreateRequestDto;
 import com.c202.diary.diary.model.request.DiaryUpdateRequestDto;
 import com.c202.diary.diary.model.response.DiaryDetailResponseDto;
 import com.c202.diary.diary.model.response.DiaryListResponseDto;
+import com.c202.diary.diary.model.response.UniverseDataResponseDto;
 
 import java.util.List;
 
@@ -23,4 +24,5 @@ public interface DiaryService {
 
     DiaryDetailResponseDto toggleDiaryIsPublic(Integer diarySeq, Integer userSeq);
 
+    UniverseDataResponseDto getUniverseData(Integer userSeq);
 }
