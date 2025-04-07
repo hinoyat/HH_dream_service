@@ -1,0 +1,110 @@
+@import url('https://fastly.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css');
+@import url('https://fonts.googleapis.com/css2?family=Galindo&family=Gowun+Batang&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Galindo&family=Gowun+Batang&family=Press+Start+2P&display=swap');
+@import 'tailwindcss';
+
+/* Pretendard 폰트는 @font-face로 정의 */
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* 마루부리 폰트(오늘의 운세에 사용) */
+@font-face {
+  font-family: 'MaruBuri';
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2)
+    format('woff2');
+}
+
+/* 둥근모 폰트(행운 번호에 사용) */
+@font-face {
+  font-family: 'DungGeunMo';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 클로버 폰트 */
+@font-face {
+  font-family: 'YClover-Bold';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/YClover-Bold.woff2')
+    format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Ownglyph_wiseelist-Rg';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2501-1@1.1/Ownglyph_wiseelist-Rg.woff2')
+    format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-family: 'Pretendard', sans-serif;
+  background-color: rgb(246, 246, 246);
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0 auto;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+/* 다른 폰트를 사용해야 하는 특정 구역이 있다면, 기존 클래스 사용 */
+.galmuri-font {
+  font-family: 'Galmuri7', sans-serif;
+}
+
+.galindo-regular {
+  font-family: 'Galindo', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.pretendard-font {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* press-start-2p-regular */
+.press-font {
+  font-family: 'Press Start 2P', system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.maru-font {
+  font-family: 'MaruBuri', sans-serif;
+}
+
+/* 둥근모 */
+.dung-font {
+  font-family: 'DungGeunMo', sans-serif;
+}
+
+/* 클로버 */
+.clover-font {
+  font-family: 'YClover-Bold', sans-serif;
+  font-weight: 700;
+}
+
+.modal-back-color {
+  background-color: rgba(110, 110, 110, 0.47);
+}
+
+.ownglyph-font {
+  font-family: 'Ownglyph_wiseelist-Rg', 'sans-serif';
+}

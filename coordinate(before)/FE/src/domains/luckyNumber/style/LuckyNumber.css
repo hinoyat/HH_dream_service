@@ -1,0 +1,214 @@
+/* LuckyNumber.css */
+.lucky-star {
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: center center;
+  transition: opacity 0.8s ease;
+  transform: 0.8s ease;
+}
+
+.lucky-star.visible {
+  opacity: 1;
+  transform: scale(1);
+  animation: glow 3s infinite;
+}
+
+/* 별이 빛나는 효과 */
+@keyframes glow {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7))
+      drop-shadow(0 0 5px rgba(255, 255, 255, 0.5))
+      drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+    opacity: 0.7;
+  }
+  50% {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.9))
+      drop-shadow(0 0 15px rgba(255, 255, 255, 0.8))
+      drop-shadow(0 0 30px rgba(255, 255, 255, 0.6))
+      drop-shadow(0 0 50px rgba(255, 255, 255, 0.4));
+    opacity: 1;
+  }
+  100% {
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7))
+      drop-shadow(0 0 5px rgba(255, 255, 255, 0.5))
+      drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+    opacity: 0.7;
+  }
+}
+
+/* 선(연결선)이 그려지는 효과 */
+.constellation-line {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1s ease-in-out;
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.6));
+}
+
+.constellation-line.visible {
+  stroke-dashoffset: 0;
+}
+
+/* 행운의 번호 텍스트 효과 */
+.lucky-text {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease;
+  transform: 1s ease;
+}
+
+.lucky-text.visible {
+  opacity: 1;
+  transform: translateY(0);
+  color: #ffffff;
+  text-shadow:
+    0 0 5px #ffffff,
+    0 0 10px #ffffff,
+    0 0 20px #ffffff;
+  animation: textGlow 3s infinite;
+}
+
+@keyframes textGlow {
+  0% {
+    text-shadow:
+      0 0 5px rgba(255, 255, 255, 0.7),
+      0 0 10px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    text-shadow:
+      0 0 10px rgba(255, 255, 255, 0.9),
+      0 0 20px rgba(255, 255, 255, 0.7),
+      0 0 30px rgba(255, 255, 255, 0.5),
+      0 0 40px rgba(255, 255, 255, 0.3);
+  }
+  100% {
+    text-shadow:
+      0 0 5px rgba(255, 255, 255, 0.7),
+      0 0 10px rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* 번호 컨테이너 스타일 */
+.number-container {
+  display: inline-block;
+  position: relative;
+  margin: 0 10px;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 2px;
+}
+
+/* 번호 슬롯 컨테이너 */
+.number-slots-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* 각 번호 슬롯 스타일 */
+.number-slot {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 14px;
+  margin: 0 13px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* 실제 번호 값을 위한 스타일 */
+.number-value {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  transition: color 0.5s ease;
+  font-size: 22px;
+}
+
+/* 번호가 채워졌을 때 스타일 */
+.number-slot.filled .number-value {
+  color: #e0c260; /* 살짝 채도가 높은 톤다운된 노란색 */
+  text-shadow:
+    0 0 5px rgba(224, 194, 96, 0.8),
+    0 0 10px rgba(224, 194, 96, 0.7),
+    0 0 15px rgba(224, 194, 96, 0.5);
+  /* 애니메이션 효과 주석 처리 */
+  animation:
+    numberAppear 0.6s forwards,
+    numberGlow 3s infinite 0.6s;
+}
+
+/* 번호가 나타나는 애니메이션 */
+@keyframes numberAppear {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 번호가 빛나는 효과 */
+@keyframes numberGlow {
+  0% {
+    text-shadow:
+      0 0 5px rgba(224, 194, 96, 0.7),
+      0 0 10px rgba(224, 194, 96, 0.5);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow:
+      0 0 10px rgba(224, 194, 96, 0.9),
+      0 0 20px rgba(224, 194, 96, 0.7),
+      0 0 30px rgba(224, 194, 96, 0.5);
+    transform: scale(1.1);
+  }
+  100% {
+    text-shadow:
+      0 0 5px rgba(224, 194, 96, 0.7),
+      0 0 10px rgba(224, 194, 96, 0.5);
+    transform: scale(1);
+  }
+}
+
+/* 별 중심 빛 효과 */
+.lucky-star-center {
+  filter: blur(0.5px);
+  transition: all 0.8s ease;
+}
+
+.lucky-star-center.visible {
+  filter: blur(0.5px) brightness(1.5);
+}
+
+/* 별 주변 빛 효과 */
+.lucky-star-glow {
+  opacity: 0;
+  transition: all 0.8s ease;
+}
+
+.lucky-star-glow.visible {
+  opacity: 0.6;
+  filter: blur(1.5px);
+}

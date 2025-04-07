@@ -1,0 +1,278 @@
+/* LuckyDrawButton.css - 3D 버튼 스타일 */
+
+/* 버튼 전체 컨테이너 - 3D 효과를 위한 기본 설정 */
+.button {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  transform-style: preserve-3d; /* 3D 변환 스타일 유지 */
+  transform: rotateX(-45deg) rotateY(25deg) rotateZ(0deg); /* 기울어진 3D 각도 설정 */
+  background-color: transparent;
+  border: none;
+  width: 120px;
+  height: 120px;
+}
+
+/* 버튼 뚜껑 부분 - 호버시 열리는 부분 */
+.lid {
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: all 1s ease-in-out; /* 뚜껑 열리는 애니메이션 */
+  transform-origin: 0 80px -120px; /* 회전 원점 설정 */
+  height: 80px;
+  width: 250px;
+  background-color: rgba(0, 0, 0, 0);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 뚜껑에 마우스 호버시 열리는 효과 */
+.lid:hover,
+.button:hover .lid {
+  transform: translate(-50%, -50%) rotateX(60deg); /* X축 기준 60도 회전 */
+}
+
+/* 뚜껑의 각 면에 대한 기본 스타일 */
+.lid .side {
+  display: inline-block;
+  width: 250px;
+  height: 250px;
+  background-color: rgba(63, 112, 141, 0.308); /* 연한 파란색 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: solid 1px rgba(0, 132, 255, 0.226);
+}
+
+/* 앞면 - 뚜껑의 정면 */
+.front {
+  transform: translate(-50%, -50%) translateZ(125px);
+  height: 80px !important;
+}
+
+/* 윗면 - 뚜껑의 윗부분 */
+.top {
+  transform: translate(-50%, -50%) rotateX(90deg) translateZ(40px);
+  background-color: rgba(167, 47, 10, 0.438); /* 연한 빨간색 */
+}
+
+/* 왼쪽면 - 뚜껑의 왼쪽 */
+.left {
+  transform: translate(-50%, -50%) rotateY(90deg) translateZ(125px);
+  height: 80px !important;
+}
+
+/* 오른쪽면 - 뚜껑의 오른쪽 */
+.right {
+  transform: translate(-50%, -50%) rotateY(-90deg) translateZ(125px);
+  height: 80px !important;
+}
+
+/* 뒷면 - 뚜껑의 뒷부분 */
+.back {
+  transform: translate(-50%, -50%) rotateY(180deg) translateZ(125px);
+  background-color: rgba(250, 234, 18, 0.418); /* 연한 노란색 */
+  height: 80px !important;
+}
+
+/* 뒷면의 왼쪽 경첩 효과 */
+.back::before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  width: 20px;
+  height: 10px;
+  background-color: black;
+  bottom: 0;
+  left: 10px;
+}
+
+/* 뒷면의 오른쪽 경첩 효과 */
+.back::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  width: 20px;
+  height: 10px;
+  background-color: black;
+  bottom: 0;
+  right: 10px;
+}
+
+/* 패널 컨테이너 - 버튼이 있는 박스의 내부 */
+.panels {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateX(90deg) translateZ(-40px);
+}
+
+/* 첫 번째 패널 - 경고 무늬가 있는 바깥쪽 테두리 */
+.panel-1 {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 250px;
+  width: 250px;
+  background-color: rgb(166, 255, 0);
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(149, 192, 92) 0% 2%,
+    /* 노란색 */ white 2% 4%
+  ); /* 경고 무늬 패턴 */
+  box-shadow: 0px 0px 0px 20px rgb(59, 113, 59); /* 빨간색 테두리 효과 */
+}
+
+/* 두 번째 패널 - 버튼이 있는 검은색 내부 */
+.panel-2 {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 200px;
+  width: 200px;
+  background-color: rgb(0, 0, 0);
+  background: linear-gradient(
+    -135deg,
+    rgb(43, 42, 42),
+    black
+  ); /* 그라데이션 효과 */
+  /* border: solid 5px rgb(247, 243, 33); */
+  border: solid 5px rgb(149, 192, 92);
+}
+
+/* 패널 1의 하단 경고 텍스트 */
+.panel-1::after {
+  content: 'Click Me!';
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 290px;
+  height: 25px;
+  color: white;
+  transform: translate(-50%, -50%) translateY(170px);
+  font-size: large;
+  background-color: rgb(59, 113, 59);
+  font-family: DungGeunMo;
+}
+
+/* 패널 1의 오른쪽 경고 텍스트 */
+.panel-1::before {
+  content: '럭키 번호 뽑기';
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 290px;
+  height: 25px;
+  color: white;
+  transform: translate(-50%, -50%) rotateZ(90deg) translateY(170px);
+  font-size: medium;
+  background-color: rgb(59, 113, 59);
+  font-family: DungGeunMo;
+}
+
+/* 버튼 트리거 컨테이너 */
+.btn-trigger {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 버튼 베이스 - 회색 바탕 */
+.btn-trigger-1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  background-color: rgb(207, 195, 195); /* 회색 */
+  box-shadow: /* 3D 효과를 위한 그림자 */
+    -0px 1px 0 rgb(54, 54, 54),
+    -0px 2px 0 rgb(54, 54, 54),
+    -1px 3px 0 rgb(54, 54, 54),
+    -1px 4px 0 rgb(54, 54, 54),
+    -2px 5px 0 rgb(54, 54, 54),
+    -2px 6px 0 rgb(54, 54, 54),
+    -3px 7px 0 rgb(54, 54, 54),
+    -3px 8px 0 rgb(54, 54, 54),
+    -4px 9px 0 rgb(54, 54, 54),
+    -4px 10px 0 rgb(54, 54, 54),
+    -5px 11px 0 rgb(54, 54, 54),
+    -5px 12px 0 rgb(54, 54, 54),
+    -6px 13px 0 rgb(54, 54, 54),
+    -6px 14px 0 rgb(54, 54, 54),
+    -7px 15px 0 rgb(54, 54, 54),
+    -7px 16px 0 rgb(54, 54, 54),
+    -8px 17px 0 rgb(54, 54, 54),
+    -8px 18px 0 rgb(54, 54, 54),
+    -9px 19px 0 rgb(54, 54, 54),
+    -9px 20px 0 rgb(54, 54, 54),
+    -10px 21px 0 rgb(54, 54, 54),
+    -10px 22px 0 rgb(54, 54, 54),
+    -11px 23px 0 rgb(54, 54, 54),
+    -11px 24px 0 rgb(54, 54, 54),
+    -12px 25px 0 rgb(54, 54, 54),
+    -12px 26px 0 rgb(54, 54, 54);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) translateZ(50px);
+}
+
+/* 실제 누르는 빨간 버튼 */
+.btn-trigger-2 {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background-color: rgb(241, 17, 17); /* 빨간색 배경 */
+  box-shadow: /* 3D 효과를 위한 그림자 */
+    -0px 1px 0 rgb(128, 5, 5),
+    -0px 2px 0 rgb(128, 5, 5),
+    -1px 3px 0 rgb(128, 5, 5),
+    -1px 4px 0 rgb(128, 5, 5),
+    -2px 5px 0 rgb(128, 5, 5),
+    -2px 6px 0 rgb(128, 5, 5),
+    -3px 7px 0 rgb(128, 5, 5),
+    -3px 8px 0 rgb(128, 5, 5),
+    -4px 9px 0 rgb(128, 5, 5),
+    -4px 10px 0 rgb(128, 5, 5),
+    -5px 11px 0 rgb(128, 5, 5),
+    -5px 12px 0 rgb(128, 5, 5),
+    -6px 13px 0 rgb(128, 5, 5),
+    -6px 14px 0 rgb(128, 5, 5),
+    -7px 15px 0 rgb(128, 5, 5),
+    -7px 16px 0 rgb(128, 5, 5);
+  border-radius: 50%;
+  transition: all 0.3s;
+  transform: translate(-40%, -70%) translateZ(100px);
+}
+
+/* 버튼을 누를 때의 효과 */
+.btn-trigger-2:active {
+  transform: translate(-50%, -50%) translateZ(100px); /* 버튼이 눌린 위치로 이동 */
+  box-shadow: none; /* 그림자 제거 */
+}
+
+/* 회전 애니메이션 */
+@keyframes rotate {
+  100% {
+    transform: rotateX(360deg);
+  }
+}
+
+/* 버튼 컨테이너 스타일 - 메인 컴포넌트에서 사용됨 */
+.button-container {
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  position: relative;
+  margin: 0 10px;
+  transition: opacity 0.5s ease;
+  transform-style: preserve-3d;
+  perspective: 800px;
+}

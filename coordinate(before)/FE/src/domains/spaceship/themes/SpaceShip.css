@@ -1,0 +1,45 @@
+/* From Uiverse.io by mrhyddenn */
+/* .shadow__btn {
+  padding: 10px 40px;
+  border: none;
+  font-size: 14px;
+  color: #206b72;
+  border-radius: 7px;
+  letter-spacing: 4px;
+  font-weight: 800;
+  text-transform: uppercase;
+  transition: 0.5s;
+  transition-property: box-shadow;
+} */
+
+/* .shadow__btn {
+  background: rgba(134, 245, 255, 0.9);
+  box-shadow: 0 0 20px rgb(134, 245, 255);
+} */
+
+/* .shadow__btn:hover {
+  box-shadow:
+    0 0 5px rgb(134, 245, 255),
+    0 0 25px rgb(134, 245, 255),
+    0 0 50px rgb(134, 245, 255),
+    0 0 100px rgb(134, 245, 255);
+} */
+
+/* 메뉴 - 기본 네온 스타일 */
+.neon-text {
+  letter-spacing: 0.15em;
+  transition: all 0.3s ease;
+  width: 200px;
+  text-align: center;
+  display: block;
+}
+
+/* 메뉴 - 호버 시 발광 효과 */
+.neon-text:hover {
+  text-shadow:
+    0 0 5px #67e8f9,
+    0 0 10px #3be8ff,
+    0 0 15px #3be8ff,
+    0 0 25px #3be8ff;
+  letter-spacing: 0.2em;
+}

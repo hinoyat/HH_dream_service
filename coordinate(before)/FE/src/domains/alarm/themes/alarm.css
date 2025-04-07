@@ -1,0 +1,26 @@
+@keyframes marquee {
+  from {
+    transform: translate(0%);
+  }
+  to {
+    transform: translate(-100%);
+  }
+}
+.animate-marquee {
+  animation: marquee 5s linear infinite;
+}
+
+/* 스크롤 커스텀 */
+#need-scrool::-webkit-scrollbar {
+  width: 5px;
+}
+
+#need-scrool::-webkit-scrollbar-thumb {
+  background-color: #252525;
+  border-radius: 10px;
+}
+#need-scrool::-webkit-scrollbar-track {
+  background-color: grey;
+  border-radius: 10px;
+  box-shadow: inset 0px 0px 5px white;
+}

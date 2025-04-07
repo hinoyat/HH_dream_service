@@ -1,0 +1,83 @@
+.cont {
+  display: flex;
+  align-items: center;
+  transform: scale(1);
+}
+
+input[type='checkbox'] {
+  height: 1.3rem;
+  width: 1.3rem;
+  margin: 5px;
+  display: inline-block;
+  appearance: none;
+  position: relative;
+  background-color: #6e6e6e;
+  border-radius: 15%;
+  cursor: pointer;
+  overflow: hidden;
+  border: white 2.2px solid;
+}
+
+input[type='checkbox']::after {
+  content: '';
+  display: block;
+  height: 1.2rem;
+  width: 0.6rem;
+  border-bottom: 0.25rem solid white;
+  border-right: 0.25rem solid white;
+  opacity: 0;
+  transform: rotate(45deg) translate(-50%, -50%);
+  position: absolute;
+  top: 40%;
+  left: 24%;
+  transition: 0.25s ease;
+}
+
+input[type='checkbox']::before {
+  content: '';
+  display: block;
+  height: 0;
+  width: 0;
+  background-color: #6e6e6e;
+  border-radius: 50%;
+  opacity: 0.5;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transition: 0.3s ease;
+}
+
+input[type='checkbox']:checked::before {
+  height: 130%;
+  width: 130%;
+  opacity: 100%;
+}
+
+input[type='checkbox']:checked::after {
+  opacity: 100%;
+}
+
+/* span {
+  font-size: 2rem;
+} */
+
+/* Firefox 전용 */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+}
+
+/* Chrome, Edge, Safari 전용 */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+}

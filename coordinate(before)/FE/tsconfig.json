@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "types": ["vite/client", "vite-plugin-svgr/client"], // svg 파일 사용을 위해 추가 정의
+    "target": "ESNext", // TypeScript가 지원하는 가장 높은 버전
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleDetection": "force",
+    "useDefineForClassFields": true,
+    "baseUrl": ".", // paths와 함께 절대 경로 사용을 위해 정의
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "moduleResolution": "node", // node module 방식 사용을 위해 정의
+    "resolveJsonModule": true, // JSON 모듈 가져오기 허용
+    "isolatedModules": true, // 각 파일을 별도 모듈로 변환
+    "noEmit": true, // Vite가 빌드를 담당하므로 TS는 타입 체크만 수행
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx", // React 17 이상의 JSX 변환 사용
+
+    "strict": true, // 모든 엄격한 유형 검사 옵션 활성화
+    "noImplicitAny": true, // 명시적이지 않은 'any' 유형으로 표현식 및 선언 사용 시 오류 발생
+    "strictNullChecks": true, // 엄격한 null 검사 사용
+    "strictFunctionTypes": true, // 엄격한 함수 유형 검사 사용
+    "strictBindCallApply": true, // 엄격한 'bind', 'call', 'apply' 함수 메서드 사용
+    "strictPropertyInitialization": true, // 클래스에서 속성 초기화 엄격 검사 사용
+    "noImplicitThis": true, // 명시적이지 않은 'any'유형으로 'this' 표현식 사용 시 오류 발생
+    "alwaysStrict": true, // 엄격모드에서 구문 분석 후, 각 소스 파일에 "use strict" 코드를 출력
+
+    "experimentalDecorators": true, // ES7 데코레이터(decorators) 실험 기능 지원 설정
+    "emitDecoratorMetadata": true, // 데코레이터를 위한 유형 메타데이터 방출 실험 기능 지원 설정
+    "esModuleInterop": true, // CommonJS와 ES 모듈 간의 상호 운용성 개선
+    "forceConsistentCasingInFileNames": true // 파일 이름의 대소문자 일관성 강제
+  },
+  "include": [
+    "src/**/*", // 'src' 폴더 내의 모든 파일을 포함 (기본적으로 모든 파일을 포함)
+    "src/react-three.d.ts", // 'src/react-three.d.ts' 파일을 명시적으로 포함
+    "src/**/*.d.ts", // 'src' 폴더 내에 있는 모든 타입 정의 파일 포함
+    "src/**/*.js", // 'src' 폴더 내에 있는 모든 JavaScript 파일 포함
+    "src/**/*.jsx", // 'src' 폴더 내에 있는 모든 JSX 파일 포함 (React 파일)
+    "src/**/*.ts", // 'src' 폴더 내에 있는 모든 TypeScript 파일 포함
+    "src/**/*.tsx" // 'src' 폴더 내에 있는 모든 TSX 파일 포함 (React와 TypeScript를 같이 사용할 때)
+  ],
+  "exclude": [
+    "node_modules", // 'node_modules' 폴더는 검사하지 않음
+    "**/node_modules", // 서브 디렉토리의 'node_modules'도 검사하지 않음
+    "dist" // 빌드 결과물이 저장되는 'dist' 폴더는 검사에서 제외
+  ]
+}
