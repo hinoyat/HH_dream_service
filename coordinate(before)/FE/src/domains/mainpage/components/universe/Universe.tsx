@@ -394,7 +394,7 @@ const Universe: React.FC<UniverseProps> = ({ isMySpace = true, userSeq }) => {
   useEffect(() => {
     const fetchUniverseData = async () => {
       try {
-        const response = await diaryApi.getUniverseData();
+        const response = await diaryApi.getUniverseData(5);
         
         if (response && response.data) {
           console.log('우주 데이터 로드됨:', response.data);
@@ -521,7 +521,7 @@ const Universe: React.FC<UniverseProps> = ({ isMySpace = true, userSeq }) => {
             autoRotate={false}
             rotateSpeed={0.5}
             minDistance={5}
-            maxDistance={200}
+            maxDistance={420}
             target={[0, 0, 0]} // 항상 구의 중심을 바라보도록
             zoomSpeed={3} // 스크롤 속도 증가
           />

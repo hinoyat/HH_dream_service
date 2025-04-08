@@ -42,7 +42,9 @@ export const diaryApi = {
   toggleLike: async (diarySeq: number) => {
     return await api.patch(`/diaries/${diarySeq}/like`);
   },
-  getUniverseData: async () => {
-    return await api.get('/diaries/universe');
+  getUniverseData: async (
+    userSeq: number
+  ) => {
+    return await api.get(`/diaries/universe/${userSeq}`);
   },
 };
